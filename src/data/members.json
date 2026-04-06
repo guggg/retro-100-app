@@ -1,0 +1,145 @@
+[
+  {
+    "id": "member-ty",
+    "name": "TY",
+    "pin": "1234",
+    "role": "工程師",
+    "tasks": [
+      "PA 流程新增 stage 未到",
+      "Error Code 模糊比對開發",
+      "金控知識庫 DB 訂定 - MongoDB",
+      "chunking 程式調整",
+      "修編比對方法定版",
+      "Housekeeping Job Issue 確認"
+    ],
+    "notes": "主要負責 Microsoft PA 開發以及知識 RAG AI 面的研究與使用。到職半年。"
+  },
+  {
+    "id": "member-jane",
+    "name": "Jane",
+    "pin": "2345",
+    "role": "PM / 數據工程師",
+    "tasks": [
+      "Sandbox 申請",
+      "preCAB & CRP",
+      "下架排程盤點",
+      "維運優先序確認",
+      "投信資料問題 follow-ups",
+      "確認時程與標籤模組規劃",
+      "mongo 數據字典測試",
+      "投信資料測試",
+      "資料回補",
+      "Graph 情境確認",
+      "Jeremy 簡報初版",
+      "證券下傳案銀行資料上線",
+      "CD Server 雲地傳輸測試",
+      "明碼表調整"
+    ],
+    "notes": "跨足多個專案線，需要大量跨部門聯絡與測試工作。"
+  },
+  {
+    "id": "member-danny",
+    "name": "Danny",
+    "pin": "3456",
+    "role": "DataOps Engineer",
+    "tasks": [
+      "AI Coding 助手優化驗證",
+      "event_log schema 規劃設計",
+      "數據字典欄位與 config YAML 格式規劃",
+      "工程數據字典填寫流程優化設計"
+    ],
+    "notes": "專注於平台架構與流程自動化設計。"
+  },
+  {
+    "id": "member-david",
+    "name": "David",
+    "pin": "4567",
+    "role": "後端工程師",
+    "tasks": [
+      "log event_type 規劃設計",
+      "Dependency 邏輯測試",
+      "雲地 Error Code 顆粒度拉齊",
+      "地端多檔彙整資料 push 到 lab 排程開發",
+      "CR 排程問題確認",
+      "OAI 使用者測試協助/技術研究",
+      "金控知識庫 DB 訂定 - MongoDB",
+      "Graph 情境確認",
+      "TCFD 報告 & 資料驗證"
+    ],
+    "notes": "經常支援跨專案的技術難題與資料處理。"
+  },
+  {
+    "id": "member-lily",
+    "name": "Lily",
+    "pin": "5678",
+    "role": "數據工程師",
+    "tasks": [
+      "log event_type 規劃設計",
+      "數據字典欄位與 config YAML 格式規劃",
+      "Repair Run 調整",
+      "補加密功能 Pipeline 開發完成",
+      "雲地 Error Code 顆粒度拉齊",
+      "地端多檔彙整資料 push 到 lab 排程開發"
+    ],
+    "notes": "主要負責平台核心 Pipeline 開發與維運相關工程。"
+  },
+  {
+    "id": "member-evie",
+    "name": "Evie",
+    "pin": "6789",
+    "role": "PM / 數據治理專員",
+    "tasks": [
+      "Sandbox 申請",
+      "工程數據字典填寫流程優化設計",
+      "下架排程盤點",
+      "維運優先序確認",
+      "歷史表開 view 申請",
+      "OAI M1-M3 結案報告",
+      "OneCathay 產險換表 (雲/地)",
+      "TD 倉儲上雲_證券資料測試與上線"
+    ],
+    "notes": "負責跨專案的協調流程，常需要同時處理多個申請與報告。"
+  },
+  {
+    "id": "member-nick",
+    "name": "Nick",
+    "pin": "7890",
+    "role": "DevOps / 平台工程師",
+    "tasks": [
+      "AI Coding 助手優化驗證",
+      "工程數據字典填寫流程優化設計",
+      "雲端排程失敗 alert 信件新增欄位",
+      "同步金控 LAB 解析建置規劃",
+      "文件解析 Pipeline 產險環境通適 & 測試調整",
+      "Jeremy 簡報初版",
+      "上下對焦資訊的區塊"
+    ],
+    "notes": "同時處理平台維運與知識庫兩條線，需要頻繁切換技術領域。"
+  },
+  {
+    "id": "member-emily",
+    "name": "Emily",
+    "pin": "8901",
+    "role": "數據工程師 / QA",
+    "tasks": [
+      "數據字典欄位與 config YAML 格式規劃",
+      "雲地 Error Code 顆粒度拉齊",
+      "多檔彙整邏輯及 py 檔測試",
+      "歷史表開 view 申請",
+      "CD 傳檔檔案盤點",
+      "TCFD 報告 & 資料驗證"
+    ],
+    "notes": "負責測試驗證與跨團隊的資料品質確認工作。"
+  },
+  {
+    "id": "member-miles",
+    "name": "Miles",
+    "pin": "9012",
+    "role": "團隊組長",
+    "tasks": [
+      "團隊進度掌握與問題排除",
+      "跨團隊協調與資源調度"
+    ],
+    "notes": "負責帶人與方向，掌握團隊工作狀況，協助排除障礙。"
+  }
+]
