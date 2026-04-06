@@ -2,7 +2,7 @@
   {
     "id": "member-ty",
     "name": "TY",
-    "pin": "1234",
+    "pin": "8774",
     "role": "工程師",
     "tasks": [
       "PA 流程新增 stage 未到",
@@ -17,7 +17,7 @@
   {
     "id": "member-jane",
     "name": "Jane",
-    "pin": "2345",
+    "pin": "7645",
     "role": "PM / 數據工程師",
     "tasks": [
       "Sandbox 申請",
@@ -40,7 +40,7 @@
   {
     "id": "member-danny",
     "name": "Danny",
-    "pin": "3456",
+    "pin": "1269",
     "role": "DataOps Engineer",
     "tasks": [
       "AI Coding 助手優化驗證",
@@ -53,7 +53,7 @@
   {
     "id": "member-david",
     "name": "David",
-    "pin": "4567",
+    "pin": "9470",
     "role": "後端工程師",
     "tasks": [
       "log event_type 規劃設計",
@@ -71,7 +71,7 @@
   {
     "id": "member-lily",
     "name": "Lily",
-    "pin": "5678",
+    "pin": "6262",
     "role": "數據工程師",
     "tasks": [
       "log event_type 規劃設計",
@@ -86,7 +86,7 @@
   {
     "id": "member-evie",
     "name": "Evie",
-    "pin": "6789",
+    "pin": "5946",
     "role": "PM / 數據治理專員",
     "tasks": [
       "Sandbox 申請",
@@ -103,7 +103,7 @@
   {
     "id": "member-nick",
     "name": "Nick",
-    "pin": "7890",
+    "pin": "7970",
     "role": "DevOps / 平台工程師",
     "tasks": [
       "AI Coding 助手優化驗證",
@@ -119,7 +119,7 @@
   {
     "id": "member-emily",
     "name": "Emily",
-    "pin": "8901",
+    "pin": "1518",
     "role": "數據工程師 / QA",
     "tasks": [
       "數據字典欄位與 config YAML 格式規劃",
@@ -134,7 +134,7 @@
   {
     "id": "member-miles",
     "name": "Miles",
-    "pin": "9012",
+    "pin": "8832",
     "role": "團隊組長",
     "tasks": [
       "團隊進度掌握與問題排除",

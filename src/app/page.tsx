@@ -73,7 +73,6 @@ export default function HomePage() {
               {member.name.charAt(0).toUpperCase()}
             </div>
             <div className="member-name">{member.name}</div>
-            <div className="member-role">{member.role}</div>
           </div>
         ))}
       </div>
