@@ -29,10 +29,11 @@ export default function HomePage() {
         body: JSON.stringify({ memberId: selectedMember, pin }),
       });
 
+      const data = await res.json();
       if (res.ok) {
+        sessionStorage.setItem("retro-token", data.token);
         router.push(`/chat/${selectedMember}`);
       } else {
-        const data = await res.json();
         setError(data.error || "驗證失敗");
       }
     } catch {
@@ -61,24 +62,25 @@ export default function HomePage() {
 
       <div className="member-grid">
         {members.map((member, index) => (
-          <div
+          <button
             key={member.id}
             className={`member-card animate-fade-in-up ${
               selectedMember === member.id ? "selected" : ""
             }`}
             style={{ animationDelay: `${index * 0.08}s` }}
             onClick={() => handleCardClick(member.id)}
+            aria-label={`選擇 ${member.name}`}
           >
             <div className="member-avatar">
               {member.name.charAt(0).toUpperCase()}
             </div>
             <div className="member-name">{member.name}</div>
-          </div>
+          </button>
         ))}
       </div>
 
       {selectedMember && (
-        <div className="pin-overlay" onClick={() => setSelectedMember(null)}>
+        <div className="pin-overlay" onClick={() => setSelectedMember(null)} role="dialog" aria-modal="true" aria-label="PIN 驗證">
           <div className="pin-modal" onClick={(e) => e.stopPropagation()}>
             <div className="member-avatar" style={{ margin: "0 auto 1rem" }}>
               {selectedMemberData?.name.charAt(0).toUpperCase()}
@@ -94,8 +96,10 @@ export default function HomePage() {
               onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))}
               onKeyDown={handleKeyDown}
               autoFocus
+              aria-label="PIN 碼"
+              aria-describedby={error ? "pin-error" : undefined}
             />
-            {error && <div className="pin-error">{error}</div>}
+            {error && <div id="pin-error" className="pin-error" role="alert">{error}</div>}
             <div className="pin-actions">
               <button
                 className="btn btn-secondary"

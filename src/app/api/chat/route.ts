@@ -2,12 +2,25 @@ import { NextRequest } from "next/server";
 import OpenAI from "openai";
 import { buildPrompt } from "@/data/prompt-template";
 import members from "@/data/members.json";
+import { verifyToken } from "@/lib/auth";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
 });
 
 export async function POST(req: NextRequest) {
+  const ip = req.headers.get("x-forwarded-for") || "unknown";
+  if (!checkRateLimit(`chat:${ip}`)) {
+    return new Response(JSON.stringify({ error: "請求過於頻繁" }), { status: 429 });
+  }
+
+  const authHeader = req.headers.get("authorization");
+  const token = authHeader?.replace("Bearer ", "");
+  if (!token || !verifyToken(token)) {
+    return new Response(JSON.stringify({ error: "未授權" }), { status: 401 });
+  }
+
   try {
     const { memberId, messages } = await req.json();
 
@@ -31,7 +44,7 @@ export async function POST(req: NextRequest) {
     ];
 
     const stream = await openai.chat.completions.create({
-      model: "gpt-5.4-mini",
+      model: process.env.OPENAI_MODEL || "gpt-4o-mini",
       messages: openaiMessages,
       stream: true,
     });

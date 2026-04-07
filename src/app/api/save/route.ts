@@ -1,7 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { appendToSheet } from "@/lib/sheets";
+import { verifyToken } from "@/lib/auth";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
+  const ip = req.headers.get("x-forwarded-for") || "unknown";
+  if (!checkRateLimit(`save:${ip}`)) {
+    return NextResponse.json({ error: "請求過於頻繁" }, { status: 429 });
+  }
+
+  const authHeader = req.headers.get("authorization");
+  const token = authHeader?.replace("Bearer ", "");
+  if (!token || !verifyToken(token)) {
+    return NextResponse.json({ error: "未授權" }, { status: 401 });
+  }
+
   try {
     const { summaryMarkdown } = await req.json();
 

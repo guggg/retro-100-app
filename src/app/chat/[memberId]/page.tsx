@@ -1,5 +1,14 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 
@@ -49,6 +58,25 @@ export default function ChatPage() {
     }
   }, [messages, summaryDetected, storageKey, hydrated]);
 
+  const [isListening, setIsListening] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const recognitionRef = useRef<any>(null);
+  const voiceBaseRef = useRef("");      // text in input before voice started
+  const voiceFinalRef = useRef("");     // accumulated final transcripts
+
+  // Cleanup speech recognition on unmount
+  useEffect(() => {
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.onresult = null;
+        recognitionRef.current.onend = null;
+        recognitionRef.current.onerror = null;
+        recognitionRef.current.abort();
+        recognitionRef.current = null;
+      }
+    };
+  }, []);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -79,9 +107,13 @@ export default function ChatPage() {
     setIsStreaming(true);
 
     try {
+      const token = sessionStorage.getItem("retro-token") || "";
       const res = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
         body: JSON.stringify({
           memberId,
           messages: newMessages,
@@ -191,9 +223,13 @@ export default function ChatPage() {
 
     setSaving(true);
     try {
+      const token = sessionStorage.getItem("retro-token") || "";
       const res = await fetch("/api/save", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
         body: JSON.stringify({ summaryMarkdown: summary }),
       });
 
@@ -208,6 +244,67 @@ export default function ChatPage() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const toggleListening = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+      return;
+    }
+
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("你的瀏覽器不支援語音輸入，請使用 Chrome 或 Edge。");
+      return;
+    }
+
+    // Clean up previous instance if any
+    if (recognitionRef.current) {
+      recognitionRef.current.onresult = null;
+      recognitionRef.current.onend = null;
+      recognitionRef.current.onerror = null;
+      recognitionRef.current.abort();
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = "zh-TW";
+    recognition.interimResults = true;
+    recognition.continuous = true;
+    recognitionRef.current = recognition;
+    voiceBaseRef.current = input;  // snapshot current input text
+    voiceFinalRef.current = "";
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    recognition.onresult = (event: any) => {
+      let interim = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          voiceFinalRef.current += transcript;
+        } else {
+          interim = transcript;
+        }
+      }
+      // Always recompose: base + finals + current interim
+      setInput(voiceBaseRef.current + voiceFinalRef.current + interim);
+    };
+
+    recognition.onend = () => {
+      // Commit final text only (drop any leftover interim)
+      setInput(voiceBaseRef.current + voiceFinalRef.current);
+      setIsListening(false);
+      recognitionRef.current = null;
+    };
+
+    recognition.onerror = () => {
+      setInput(voiceBaseRef.current + voiceFinalRef.current);
+      setIsListening(false);
+      recognitionRef.current = null;
+    };
+
+    recognition.start();
+    setIsListening(true);
   };
 
   const formatMessage = (content: string) => {
@@ -245,7 +342,7 @@ export default function ChatPage() {
           ))}
 
         {isStreaming && messages[messages.length - 1]?.role !== "assistant" && (
-          <div className="typing-indicator">
+          <div className="typing-indicator" role="status" aria-label="AI 正在輸入">
             <div className="typing-dot" />
             <div className="typing-dot" />
             <div className="typing-dot" />
@@ -284,9 +381,18 @@ export default function ChatPage() {
               rows={1}
             />
             <button
+              className={`chat-mic-btn${isListening ? " chat-mic-btn-active" : ""}`}
+              onClick={toggleListening}
+              disabled={isStreaming}
+              title="語音輸入"
+            >
+              {isListening ? "⏹" : "🎤"}
+            </button>
+            <button
               className="chat-send-btn"
               onClick={handleSend}
               disabled={!input.trim() || isStreaming}
+              aria-label="發送訊息"
             >
               ↑
             </button>
