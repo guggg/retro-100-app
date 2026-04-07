@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     ];
 
     const stream = await openai.chat.completions.create({
-      model: process.env.OPENAI_MODEL || "gpt-4o-mini",
+      model: process.env.OPENAI_MODEL || "gpt-5.4-mini",
       messages: openaiMessages,
       stream: true,
     });
@@ -78,9 +78,8 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error: unknown) {
-    const errMsg = error instanceof Error ? error.message : String(error);
-    console.error("Chat API error:", errMsg);
-    return new Response(JSON.stringify({ error: errMsg }), {
+    console.error("Chat API error:", error);
+    return new Response(JSON.stringify({ error: "聊天服務暫時無法使用，請稍後再試" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });

@@ -53,12 +53,10 @@ describe("ChatPage - Voice Input", () => {
     expect(micBtn).toHaveTextContent("🎤");
   });
 
-  it("shows alert when SpeechRecognition is not supported", async () => {
-    const alertSpy = jest.spyOn(window, "alert").mockImplementation(() => {});
+  it("shows toast when SpeechRecognition is not supported", async () => {
     await act(async () => { render(<ChatPage />); });
     await act(async () => { fireEvent.click(screen.getByTitle("語音輸入")); });
-    expect(alertSpy).toHaveBeenCalledWith("你的瀏覽器不支援語音輸入，請使用 Chrome 或 Edge。");
-    alertSpy.mockRestore();
+    expect(screen.getByRole("alert")).toHaveTextContent("你的瀏覽器不支援語音輸入，請使用 Chrome 或 Edge。");
   });
 
   it("starts listening with correct config (webkitSpeechRecognition)", async () => {

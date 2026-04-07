@@ -36,11 +36,6 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-@font-face {
-  font-family: 'Inter';
-  src: url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-}
-
 /* Focus styles for accessibility */
 :focus-visible {
   outline: 2px solid var(--accent);
@@ -337,6 +332,28 @@ html, body {
   background: var(--bg-secondary);
 }
 
+.chat-back-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.chat-back-btn:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+  border-color: var(--accent);
+}
+
 .chat-header-dot {
   width: 10px;
   height: 10px;
@@ -393,6 +410,48 @@ html, body {
 
 .chat-bubble-ai p:last-child {
   margin-bottom: 0;
+}
+
+.chat-bubble-ai ul,
+.chat-bubble-ai ol {
+  margin: 0.25em 0;
+  padding-left: 1.5em;
+}
+
+.chat-bubble-ai li {
+  margin-bottom: 0.2em;
+}
+
+.chat-bubble-ai code {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  font-size: 0.88em;
+}
+
+.chat-bubble-ai pre {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.75em 1em;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 0.5em 0;
+}
+
+.chat-bubble-ai pre code {
+  background: none;
+  padding: 0;
+}
+
+.chat-bubble-ai strong {
+  color: var(--accent-hover);
+}
+
+.chat-bubble-ai h1,
+.chat-bubble-ai h2,
+.chat-bubble-ai h3 {
+  font-size: 1em;
+  font-weight: 700;
+  margin: 0.5em 0 0.25em;
 }
 
 .typing-indicator {
@@ -556,4 +615,23 @@ html, body {
   color: var(--text-secondary);
   font-size: 1rem;
   max-width: 400px;
+}
+
+/* Toast notification */
+.toast {
+  position: fixed;
+  bottom: 5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--danger);
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+  z-index: 100;
+  animation: fadeInUp 0.3s ease-out;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  max-width: min(400px, 90vw);
+  text-align: center;
 }

@@ -11,6 +11,7 @@ declare global {
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
+import ReactMarkdown from "react-markdown";
 
 interface Message {
   role: "user" | "assistant";
@@ -31,6 +32,17 @@ export default function ChatPage() {
   const [saving, setSaving] = useState(false);
   const [started, setStarted] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const showToast = (msg: string) => {
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    setToast(msg);
+    toastTimerRef.current = setTimeout(() => {
+      setToast(null);
+      toastTimerRef.current = null;
+    }, 4000);
+  };
 
   // Load messages from localStorage on mount
   useEffect(() => {
@@ -127,15 +139,31 @@ export default function ChatPage() {
 
       const decoder = new TextDecoder();
       let assistantMessage = "";
+      let buffer = ""; // accumulate partial lines across chunks
+      let rafPending = false;
 
       setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+
+      const flushUI = () => {
+        rafPending = false;
+        setMessages((prev) => {
+          const updated = [...prev];
+          updated[updated.length - 1] = {
+            role: "assistant",
+            content: assistantMessage,
+          };
+          return updated;
+        });
+      };
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
 
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split("\n");
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        // Keep last element — it may be incomplete
+        buffer = lines.pop() || "";
 
         for (const line of lines) {
           if (line.startsWith("data: ")) {
@@ -146,21 +174,22 @@ export default function ChatPage() {
               const parsed = JSON.parse(data);
               if (parsed.text) {
                 assistantMessage += parsed.text;
-                setMessages((prev) => {
-                  const updated = [...prev];
-                  updated[updated.length - 1] = {
-                    role: "assistant",
-                    content: assistantMessage,
-                  };
-                  return updated;
-                });
               }
             } catch {
-              // skip parse errors
+              // incomplete JSON — will be completed in next chunk
             }
           }
         }
+
+        // Batch UI updates via requestAnimationFrame
+        if (!rafPending) {
+          rafPending = true;
+          requestAnimationFrame(flushUI);
+        }
       }
+
+      // Final flush to ensure all text is rendered
+      flushUI();
 
       // Check if summary was generated
       if (
@@ -237,10 +266,10 @@ export default function ChatPage() {
         localStorage.removeItem(storageKey);
         router.push("/done");
       } else {
-        alert("儲存失敗，請再試一次");
+        showToast("儲存失敗，請再試一次");
       }
     } catch {
-      alert("網路錯誤，請再試一次");
+      showToast("網路錯誤，請再試一次");
     } finally {
       setSaving(false);
     }
@@ -255,7 +284,7 @@ export default function ChatPage() {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      alert("你的瀏覽器不支援語音輸入，請使用 Chrome 或 Edge。");
+      showToast("你的瀏覽器不支援語音輸入，請使用 Chrome 或 Edge。");
       return;
     }
 
@@ -309,16 +338,22 @@ export default function ChatPage() {
 
   const formatMessage = (content: string) => {
     // Remove the summary markers for display
-    let display = content
+    return content
       .replace("[SUMMARY_START]", "")
       .replace("[SUMMARY_END]", "");
-    return display;
   };
 
   return (
     <div className="chat-container">
       {/* Header */}
       <div className="chat-header">
+        <button
+          className="chat-back-btn"
+          onClick={() => router.push("/")}
+          aria-label="回到首頁"
+        >
+          ←
+        </button>
         <div className="chat-header-dot" />
         <div>
           <div className="chat-header-title">Retro AI 引導員</div>
@@ -337,7 +372,11 @@ export default function ChatPage() {
                 msg.role === "user" ? "chat-bubble-user" : "chat-bubble-ai"
               }`}
             >
-              {formatMessage(msg.content)}
+              {msg.role === "assistant" ? (
+                <ReactMarkdown>{formatMessage(msg.content)}</ReactMarkdown>
+              ) : (
+                formatMessage(msg.content)
+              )}
             </div>
           ))}
 
@@ -397,6 +436,13 @@ export default function ChatPage() {
               ↑
             </button>
           </div>
+        </div>
+      )}
+
+      {/* Toast notification */}
+      {toast && (
+        <div className="toast" role="alert">
+          {toast}
         </div>
       )}
     </div>
