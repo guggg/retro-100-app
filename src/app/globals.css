@@ -386,7 +386,7 @@ html, body {
   padding: 0.85rem 1.15rem;
   border-radius: 16px;
   font-size: 0.95rem;
-  line-height: 1.6;
+  line-height: 1.5;
   animation: fadeInUp 0.3s ease-out;
   white-space: pre-wrap;
 }
@@ -404,37 +404,51 @@ html, body {
   border-bottom-left-radius: 4px;
 }
 
-.chat-bubble-ai p {
-  margin: 0 0 0.5em 0;
+.chat-bubble-ai *,
+.chat-bubble-ai * * {
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-.chat-bubble-ai p:last-child {
-  margin-bottom: 0;
+.chat-bubble-ai > * + * {
+  margin-top: 0.3em !important;
+}
+
+.chat-bubble-ai blockquote > * + * {
+  margin-top: 0.25em !important;
 }
 
 .chat-bubble-ai ul,
 .chat-bubble-ai ol {
-  margin: 0.25em 0;
-  padding-left: 1.5em;
+  padding-left: 1.4em !important;
 }
 
-.chat-bubble-ai li {
-  margin-bottom: 0.2em;
+.chat-bubble-ai li + li {
+  margin-top: 0.15em !important;
+}
+
+.chat-bubble-ai blockquote {
+  padding-left: 0.6em !important;
+  border-left: 2px solid var(--border-accent);
+}
+
+.chat-bubble-ai hr {
+  border: none;
+  border-top: 1px solid var(--border);
 }
 
 .chat-bubble-ai code {
   background: rgba(255, 255, 255, 0.08);
-  padding: 0.15em 0.4em;
+  padding: 0.1em 0.35em !important;
   border-radius: 4px;
   font-size: 0.88em;
 }
 
 .chat-bubble-ai pre {
   background: rgba(0, 0, 0, 0.3);
-  padding: 0.75em 1em;
+  padding: 0.5em 0.75em !important;
   border-radius: 8px;
   overflow-x: auto;
-  margin: 0.5em 0;
 }
 
 .chat-bubble-ai pre code {
@@ -448,10 +462,10 @@ html, body {
 
 .chat-bubble-ai h1,
 .chat-bubble-ai h2,
-.chat-bubble-ai h3 {
+.chat-bubble-ai h3,
+.chat-bubble-ai h4 {
   font-size: 1em;
   font-weight: 700;
-  margin: 0.5em 0 0.25em;
 }
 
 .typing-indicator {

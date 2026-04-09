@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
     }
 
     const systemPrompt = buildPrompt({
+      name: member.name,
       role: member.role,
       tasks: member.tasks,
       notes: member.notes,
